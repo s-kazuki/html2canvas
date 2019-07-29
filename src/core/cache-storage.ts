@@ -128,7 +128,11 @@ export class Cache {
             if (isInlineBase64Image(src) || useCORS) {
                 img.crossOrigin = 'anonymous';
             }
-            img.src = src;
+            if (new RegExp('s3\\..+\\.amazonaws\\.com').test(img.src)) {
+                img.src = `${src}&v=${new Date().getTime()}`;
+            } else {
+                img.src = src;
+            }
             if (img.complete === true) {
                 // Inline XML images may fail to parse, throwing an Error later on
                 setTimeout(() => resolve(img), 500);
