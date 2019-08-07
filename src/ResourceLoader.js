@@ -138,7 +138,11 @@ export default class ResourceLoader {
             }
 
             img.onerror = reject;
-            img.src = src;
+            if (new RegExp('s3\\..+\\.amazonaws\\.com').test(img.src)) {
+                img.src = `${src}&v=${new Date().getTime()}`;
+            } else {
+                img.src = src;
+            }
             if (img.complete === true) {
                 // Inline XML images may fail to parse, throwing an Error later on
                 setTimeout(() => {
